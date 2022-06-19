@@ -26,13 +26,22 @@ target_link_directories(
 
 target_link_libraries(
     ${PROJECT_NAME}
-    sfml-window-s
+
     sfml-system-s
-    "-framework CoreFoundation"
-    "-framework CoreGraphics"
-    "-framework Carbon"
-    "-framework IOKit"
-    "-framework AppKit"
-    -ObjC
+    sfml-window-s
+    sfml-graphics-s
 )
 
+if(APPLE)
+    target_link_libraries(
+        ${PROJECT_NAME}
+
+        "-framework CoreFoundation"
+        "-framework CoreGraphics"
+        "-framework Carbon"
+        "-framework IOKit"
+        "-framework AppKit"
+    
+        -ObjC
+    )
+endif()
