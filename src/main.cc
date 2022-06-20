@@ -2,27 +2,33 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
+#include "ResourceManager.hh"
+
+void correct_ratio(sf::Window &window, sf::Event &ev)
+{
+    auto width = ev.size.width;
+    auto height = ev.size.height;
+    auto max = width > height ? width : height;
+    window.setSize(sf::Vector2u(max, max));
+}
+
 int main()
 {
+    ResourceManager manager("./assets");
+
     sf::Vector2u windowSize(474, 474);
     sf::RenderWindow window(sf::VideoMode(windowSize), "Lines");
 
-    sf::Texture tileTexture;
-    if (!tileTexture.loadFromFile("../assets/textures/Tile.png"))
-    {
-        throw std::runtime_error("failed to load textures.");
-    }
+    sf::Sprite tileSprite;
+    tileSprite.setTexture(*(sf::Texture *)manager.get("textures/tile"));
 
-    sf::Texture selectionTexture;
-    if (!selectionTexture.loadFromFile("../assets/textures/Selection.png"))
-    {
-        throw std::runtime_error("failed to load textures.");
-    }
+    sf::Sprite planetSprite(*(sf::Texture *)manager.get("textures/lava"));
+    planetSprite.setPosition(sf::Vector2f(10, 10));
 
-    sf::Sprite tileSprite(tileTexture);
-    sf::Sprite selectionSprite(selectionTexture);
+    sf::Sprite selectionSprite(*(sf::Texture *)manager.get("textures/selection"));
+    selectionSprite.setPosition(sf::Vector2f(7, 7));
 
-    selectionSprite.setPosition(sf::Vector2f(10, 10));
+    auto show = false;
 
     while (window.isOpen())
     {
@@ -32,13 +38,21 @@ int main()
             switch (event.type)
             {
             case sf::Event::Closed:
+            {
                 window.close();
                 break;
+            }
+            case sf::Event::MouseButtonPressed:
+            {
+                show = !show;
+                break;
+            }
             case sf::Event::Resized:
-                auto width = event.size.width;
-                auto height = event.size.height;
-                auto max = width > height ? width : height;
-                window.setSize(sf::Vector2u(max, max));
+            {
+                correct_ratio(window, event);
+                break;
+            }
+            default:
                 break;
             }
         }
@@ -52,7 +66,9 @@ int main()
                 window.draw(tileSprite);
             }
 
-        window.draw(selectionSprite);
+        if (show)
+            window.draw(selectionSprite);
+        window.draw(planetSprite);
 
         window.display();
     }

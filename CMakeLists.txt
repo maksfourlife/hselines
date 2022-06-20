@@ -10,6 +10,7 @@ project(
 add_executable(
     ${PROJECT_NAME}
     src/main.cc
+    src/ResourceManager.cc
 )
 
 target_include_directories(
@@ -30,6 +31,9 @@ target_link_libraries(
     sfml-system-s
     sfml-window-s
     sfml-graphics-s
+
+    # not sure if this is specific to OSX
+    freetype
 )
 
 if(APPLE)
@@ -45,3 +49,9 @@ if(APPLE)
         -ObjC
     )
 endif()
+
+add_custom_command(
+    TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets
+)
