@@ -1,6 +1,5 @@
 #include "ResourceManager.hh"
 #include <SFML/Graphics.hpp>
-#include <iostream>
 
 namespace fs = std::filesystem;
 

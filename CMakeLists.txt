@@ -10,6 +10,9 @@ project(
 add_executable(
     ${PROJECT_NAME}
     src/main.cc
+    src/App.cc
+    src/Ball.cc
+    src/Board.cc
     src/ResourceManager.cc
 )
 
@@ -32,7 +35,6 @@ target_link_libraries(
     sfml-window-s
     sfml-graphics-s
 
-    # not sure if this is specific to OSX
     freetype
 )
 

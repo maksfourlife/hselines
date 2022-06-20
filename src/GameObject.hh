@@ -1,9 +1,8 @@
 #pragma once
-
-#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 
 class GameObject
 {
 public:
-    virtual void draw(const sf::Window &window) = const 0;
+    virtual void draw(sf::RenderWindow &window) = 0;
 };
