@@ -78,7 +78,8 @@ void Board::handleEvent(const sf::Event &ev)
             {
                 this->selectedTile = -1;
                 // todo: animate
-                std::cout << this->generateBalls(3) << std::endl;
+                this->generateBalls(3);
+                this->clearLines();
             }
         }
     }
@@ -114,7 +115,7 @@ bool Board::generateBalls(size_t numBalls)
         for (auto j = 0; j < flat; j++)
         {
             auto _tile = (tile + j) % flat;
-            if (this->ballGrid[_tile] == BallType::None)
+            if (this->ballGrid[_tile] == ::None)
             {
                 this->ballGrid[_tile] = ballType;
                 ok = true;
@@ -126,4 +127,27 @@ bool Board::generateBalls(size_t numBalls)
     }
 
     return true;
+}
+
+// todo: setpoints callback
+// todo: vertical lines
+void Board::clearLines(size_t minBalls)
+{
+    BallType prevBallType = ::None;
+    size_t ballCount = 0;
+    size_t flat = this->size.x * this->size.y;
+    for (size_t i = 0; i < flat; i++)
+    {
+        auto ballType = this->ballGrid[i];
+        if (prevBallType == ballType)
+            ballCount++;
+        else
+        {
+            if (ballCount >= minBalls && prevBallType != ::None)
+                for (int j = ballCount; j > 0; j--)
+                    this->ballGrid.erase(i - j);
+            ballCount = 1;
+        }
+        prevBallType = ballType;
+    }
 }

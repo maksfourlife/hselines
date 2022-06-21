@@ -14,5 +14,4 @@ private:
     Board *board;
 
     void handleEvent(const sf::Event &ev);
-    void correctRatio(const sf::Event &ev);
 };

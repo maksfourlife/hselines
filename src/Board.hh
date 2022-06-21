@@ -43,4 +43,7 @@ private:
     bool getClickedTile(int mouseX, int mouseY, size_t &clickedTile);
     // adds new random balls to grid, if can't add returns false
     bool generateBalls(size_t numBalls);
+    // finds vertical and horizonal lines of balls with same type
+    // if finds line length > 5, clears it
+    void clearLines(size_t minBalls = 5);
 };

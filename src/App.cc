@@ -1,18 +1,19 @@
 #include "App.hh"
 
-#define SIZE 474
+#define SIZE 590
 
 App::App()
 {
     this->window = new sf::RenderWindow(
         sf::VideoMode(sf::Vector2u(SIZE, SIZE)),
-        "Lines");
+        "Lines",
+        sf::Style::Default & ~sf::Style::Resize);
 
     ResourceManager::getInstance().load("./assets");
 
     this->board = new Board(
         sf::Vector2f(5, 5),
-        sf::Vector2u(8, 8));
+        sf::Vector2u(10, 10));
 }
 
 void App::run()
@@ -43,22 +44,9 @@ void App::handleEvent(const sf::Event &ev)
         this->window->close();
         break;
     }
-    case sf::Event::Resized:
-    {
-        this->correctRatio(ev);
-        break;
-    }
     default:
         break;
     }
-}
-
-void App::correctRatio(const sf::Event &ev)
-{
-    auto width = ev.size.width;
-    auto height = ev.size.height;
-    auto max = width > height ? width : height;
-    this->window->setSize(sf::Vector2u(max, max));
 }
 
 App::~App()
