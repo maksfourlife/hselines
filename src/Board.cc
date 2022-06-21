@@ -1,32 +1,43 @@
-#include "Board.hh"
 #include <iostream>
+#include "Board.hh"
 
-#define TILE_SIZE 58
+std::map<BallType, std::string> ballName = {
+    {BallType::Baren, "baren"},
+    {BallType::Ice, "ice"},
+    {BallType::Lava, "lava"},
+    {BallType::Terran, "terran"}};
 
-Board::Board(
-    ResourceManager &manager,
-    const sf::Vector2f pos,
-    const sf::Vector2u size)
+Board::Board(sf::Vector2f pos, sf::Vector2u size)
 {
     this->pos = pos;
     this->size = size;
 
-    this->tile = new sf::Sprite(
-        *(sf::Texture *)manager.get("textures/tile"));
-}
+    auto resManager = ResourceManager::getInstance();
 
-Board::~Board()
-{
-    delete this->tile;
+    auto texture = (sf::Texture *)resManager.get("textures/tile");
+    this->tileSize = texture->getSize();
+    this->tileSprite = sf::Sprite(*texture);
+
+    this->selectionSprite = sf::Sprite(
+        *(sf::Texture *)resManager.get("textures/selection"));
+
+    for (auto &item : ballName)
+    {
+        auto textureName = "textures/" + item.second;
+        sf::Sprite s(*(sf::Texture *)resManager.get(textureName));
+        this->ballSprites.insert({item.first, s});
+    }
 }
 
 void Board::draw(sf::RenderWindow &window)
 {
-    for (size_t i = 0; i < this->size.x; i++)
-        for (size_t j = 0; j < this->size.y; j++)
-        {
-            auto pos = this->pos + sf::Vector2f(i * TILE_SIZE, j * TILE_SIZE);
-            this->tile->setPosition(pos);
-            window.draw(*this->tile);
-        }
+    size_t flat = this->size.x * this->size.y;
+    for (size_t i = 0; i < flat; i++)
+    {
+        auto pos = sf::Vector2f(
+            this->pos.x + this->tileSize.x * (i % this->size.x),
+            this->pos.y + this->tileSize.y * (i / this->size.x));
+        this->tileSprite.setPosition(pos);
+        window.draw(this->tileSprite);
+    }
 }

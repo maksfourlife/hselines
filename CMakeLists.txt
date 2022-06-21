@@ -11,7 +11,6 @@ add_executable(
     ${PROJECT_NAME}
     src/main.cc
     src/App.cc
-    src/Ball.cc
     src/Board.cc
     src/ResourceManager.cc
 )

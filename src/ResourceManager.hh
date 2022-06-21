@@ -9,7 +9,8 @@
 class ResourceManager
 {
 public:
-    ResourceManager(const std::filesystem::path &path);
+    static ResourceManager &getInstance();
+    void load(const std::filesystem::path &path);
     const sf::GlResource *get(const std::string &name);
 
 private:

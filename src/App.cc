@@ -1,6 +1,6 @@
 #include "App.hh"
 
-#define SIZE 464
+#define SIZE 474
 
 App::App()
 {
@@ -8,10 +8,9 @@ App::App()
         sf::VideoMode(sf::Vector2u(SIZE, SIZE)),
         "Lines");
 
-    ResourceManager manager("./assets");
+    ResourceManager::getInstance().load("./assets");
 
     this->board = new Board(
-        manager,
         sf::Vector2f(5, 5),
         sf::Vector2u(8, 8));
 }

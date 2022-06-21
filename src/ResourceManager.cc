@@ -3,7 +3,13 @@
 
 namespace fs = std::filesystem;
 
-ResourceManager::ResourceManager(const fs::path &assets_path)
+ResourceManager &ResourceManager::getInstance()
+{
+    static ResourceManager instance;
+    return instance;
+}
+
+void ResourceManager::load(const fs::path &assets_path)
 {
     for (auto &entry : fs::recursive_directory_iterator(assets_path))
     {
