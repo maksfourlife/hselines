@@ -5,6 +5,8 @@
 #include "GameObject.hh"
 #include "ResourceManager.hh"
 
+#define _NUM_BALL_TYPES 5
+
 enum BallType
 {
     None,
@@ -17,7 +19,7 @@ enum BallType
 class Board : GameObject
 {
 public:
-    Board(sf::Vector2f pos, sf::Vector2u size);
+    Board(sf::Vector2f pos, sf::Vector2u size, size_t initialBalls = 5);
 
     virtual void draw(sf::RenderWindow &window) override;
     virtual void handleEvent(const sf::Event &ev) override;
@@ -39,4 +41,6 @@ private:
     bool moveBall(size_t srt, size_t dst);
     // child of "mouseClicked" event handler
     bool getClickedTile(int mouseX, int mouseY, size_t &clickedTile);
+    // adds new random balls to grid, if can't add returns false
+    bool generateBalls(size_t numBalls);
 };
