@@ -21,7 +21,10 @@ void App::run()
     {
         sf::Event event;
         while (window->pollEvent(event))
+        {
             this->handleEvent(event);
+            this->board->handleEvent(event);
+        }
 
         this->window->clear(sf::Color(0xa8, 0xa8, 0xa8));
 

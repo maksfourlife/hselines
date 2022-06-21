@@ -7,6 +7,7 @@
 
 enum BallType
 {
+    None,
     Baren,
     Ice,
     Lava,
@@ -19,7 +20,7 @@ public:
     Board(sf::Vector2f pos, sf::Vector2u size);
 
     virtual void draw(sf::RenderWindow &window) override;
-    void handleEvent(const sf::Event &ev);
+    virtual void handleEvent(const sf::Event &ev) override;
 
 private:
     sf::Vector2f pos;
@@ -37,5 +38,5 @@ private:
     // moves ball using A* algorithm, possibly performs an animation
     bool moveBall(size_t srt, size_t dst);
     // child of "mouseClicked" event handler
-    size_t getClickedTile(const sf::Event &ev);
+    bool getClickedTile(int mouseX, int mouseY, size_t &clickedTile);
 };
