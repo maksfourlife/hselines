@@ -141,25 +141,48 @@ bool Board::generateBalls(size_t numBalls)
     return true;
 }
 
-// todo: setpoints callback
-// todo: vertical lines
+// todo: setPoints callback
 void Board::clearLines(size_t minBalls)
 {
-    BallType prevBallType = ::None;
-    size_t ballCount = 0;
-    size_t flat = this->size.x * this->size.y;
-    for (size_t i = 0; i < flat; i++)
+    for (size_t i = 0; i < this->size.x; i++)
     {
-        auto ballType = this->ballGrid[i];
-        if (prevBallType == ballType)
-            ballCount++;
-        else
+        BallType prevBallType = ::None;
+        size_t ballCount = 0;
+        for (size_t j = 0; j < this->size.y; j++)
         {
-            if (ballCount >= minBalls && prevBallType != ::None)
-                for (int j = ballCount; j > 0; j--)
-                    this->ballGrid.erase(i - j);
-            ballCount = 1;
+            auto ballType = this->ballGrid[i * this->size.x + j];
+            if (ballType == prevBallType)
+                ballCount++;
+            else
+            {
+                if (prevBallType != ::None && ballCount >= minBalls)
+                    for (int k = ballCount; k > 0; k--)
+                        this->ballGrid.erase(i * this->size.x + j - k);
+                ballCount = 1;
+            }
+            prevBallType = ballType;
         }
-        prevBallType = ballType;
+    }
+
+    for (size_t j = 0; j < this->size.x; j++)
+    {
+        BallType prevBallType = ::None;
+        size_t ballCount = 0;
+        for (size_t i = 0; i < this->size.y; i++)
+        {
+            auto ballType = this->ballGrid[i * this->size.x + j];
+            if (ballType == prevBallType)
+                ballCount++;
+            else
+            {
+                if (prevBallType != ::None && ballCount >= minBalls)
+                    for (int k = ballCount; k > 0; k--)
+                    {
+                        this->ballGrid.erase((i - k) * this->size.x + j);
+                    }
+                ballCount = 1;
+            }
+            prevBallType = ballType;
+        }
     }
 }
