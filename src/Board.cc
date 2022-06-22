@@ -2,10 +2,10 @@
 #include "Board.hh"
 
 std::map<BallType, std::string> ballName = {
-    {BallType::Baren, "baren"},
-    {BallType::Ice, "ice"},
-    {BallType::Lava, "lava"},
-    {BallType::Terran, "terran"}};
+    {::Baren, "baren"},
+    {::Ice, "ice"},
+    {::Lava, "lava"},
+    {::Terran, "terran"}};
 
 Board::Board(sf::Vector2f pos, sf::Vector2u size, size_t initialBalls)
 {
@@ -18,14 +18,16 @@ Board::Board(sf::Vector2f pos, sf::Vector2u size, size_t initialBalls)
     this->tileSize = texture->getSize();
     this->tileSprite = sf::Sprite(*texture);
 
+    texture = (sf::Texture *)resManager.get("textures/selection");
+    this->selectionSize = texture->getSize();
     this->selectionSprite = sf::Sprite(
-        *(sf::Texture *)resManager.get("textures/selection"));
+        *texture);
 
     for (auto &item : ballName)
     {
-        auto textureName = "textures/" + item.second;
-        sf::Sprite s(*(sf::Texture *)resManager.get(textureName));
-        this->ballSprites[item.first] = s;
+        texture = (sf::Texture *)resManager.get("textures/" + item.second);
+        this->ballSize = texture->getSize();
+        this->ballSprites[item.first] = sf::Sprite(*texture);
     }
 
     this->generateBalls(initialBalls);
@@ -33,27 +35,37 @@ Board::Board(sf::Vector2f pos, sf::Vector2u size, size_t initialBalls)
 
 void Board::draw(sf::RenderWindow &window)
 {
+    auto ballOffset = sf::Vector2f(
+        (this->tileSize.x - this->ballSize.x) / 2,
+        (this->tileSize.y - this->ballSize.y) / 2);
+
+    auto selectionOffset = sf::Vector2f(
+        (this->tileSize.x - this->selectionSize.x) / 2,
+        (this->tileSize.y - this->selectionSize.y) / 2);
+
     size_t flat = this->size.x * this->size.y;
     for (size_t i = 0; i < flat; i++)
     {
+        auto x = i % this->size.x;
+        auto y = i / this->size.x;
         auto pos = sf::Vector2f(
-            this->pos.x + this->tileSize.x * (i % this->size.x),
-            this->pos.y + this->tileSize.y * (i / this->size.x));
+            this->pos.x + this->tileSize.x * x,
+            this->pos.y + this->tileSize.y * y);
 
         this->tileSprite.setPosition(pos);
         window.draw(this->tileSprite);
 
         if (this->selectedTile == i)
         {
-            this->selectionSprite.setPosition(pos);
+            this->selectionSprite.setPosition(pos + selectionOffset);
             window.draw(this->selectionSprite);
         }
 
         auto ballType = this->ballGrid[i];
-        if (ballType != BallType::None)
+        if (ballType != ::None)
         {
             auto sprite = this->ballSprites[ballType];
-            sprite.setPosition(pos);
+            sprite.setPosition(pos + ballOffset);
             window.draw(sprite);
         }
     }
@@ -72,7 +84,7 @@ void Board::handleEvent(const sf::Event &ev)
         size_t clickedTile;
         if (getClickedTile(mouseX, mouseY, clickedTile))
         {
-            if (this->selectedTile == -1 && this->ballGrid[clickedTile] != BallType::None)
+            if (this->selectedTile == -1 || this->ballGrid[clickedTile] != ::None)
                 this->selectedTile = clickedTile;
             else if (this->selectedTile != -1 && this->moveBall(selectedTile, clickedTile))
             {
@@ -95,7 +107,7 @@ bool Board::getClickedTile(int mouseX, int mouseY, size_t &clickedTile)
 
 bool Board::moveBall(size_t src, size_t dst)
 {
-    if (this->ballGrid[dst] != BallType::None)
+    if (this->ballGrid[dst] != ::None)
         return false;
     this->ballGrid[dst] = this->ballGrid[src];
     this->ballGrid.erase(src);

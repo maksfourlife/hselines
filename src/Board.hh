@@ -32,7 +32,11 @@ private:
     // sprites
     sf::Vector2u tileSize;
     sf::Sprite tileSprite;
+
+    sf::Vector2u selectionSize;
     sf::Sprite selectionSprite;
+
+    sf::Vector2u ballSize;
     std::map<BallType, sf::Sprite> ballSprites = {};
     // selected tile, used for moving balls
     size_t selectedTile = -1;
