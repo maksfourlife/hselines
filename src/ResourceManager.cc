@@ -40,5 +40,8 @@ void ResourceManager::load(const fs::path &assets_path)
 
 const sf::GlResource *ResourceManager::get(const std::string &name)
 {
-    return this->resources[name];
+    auto res = this->resources[name];
+    if (res == nullptr)
+        throw std::runtime_error("resource not found");
+    return res;
 }

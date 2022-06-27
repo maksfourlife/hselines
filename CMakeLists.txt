@@ -1,14 +1,12 @@
 cmake_minimum_required(VERSION 3.19.6)
 
-set(PROJECT_NAME hselines)
 set(CMAKE_CXX_STANDARD 17)
 
-project(
-    ${PROJECT_NAME}
-)
+project(hselines)
 
+# Приложение
 add_executable(
-    ${PROJECT_NAME}
+    lines
     src/main.cc
     src/App.cc
     src/Board.cc
@@ -17,19 +15,19 @@ add_executable(
 )
 
 target_include_directories(
-    ${PROJECT_NAME}
+    lines
     PUBLIC
     /usr/local/include
 )
 
 target_link_directories(
-    ${PROJECT_NAME}
+    lines
     PUBLIC
     /usr/local/lib
 )
 
 target_link_libraries(
-    ${PROJECT_NAME}
+    lines
 
     sfml-system-s
     sfml-window-s
@@ -40,7 +38,7 @@ target_link_libraries(
 
 if(APPLE)
     target_link_libraries(
-        ${PROJECT_NAME}
+        lines
 
         "-framework CoreFoundation"
         "-framework CoreGraphics"
@@ -53,7 +51,26 @@ if(APPLE)
 endif()
 
 add_custom_command(
-    TARGET ${PROJECT_NAME}
+    TARGET lines
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:lines>/assets
+)
+
+# Тесты
+add_executable(
+    tests
+    tests/test_res.cc
+
+    src/main.cc
+    src/App.cc
+    src/Board.cc
+    src/Count.cc
+    src/ResourceManager.cc
+)
+
+target_include_directories(
+    tests
+    PUBLIC
+    /usr/local/include
+    ${CMAKE_SOURCE_DIR}/src
 )

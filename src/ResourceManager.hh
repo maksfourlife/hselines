@@ -6,11 +6,17 @@
 #include <SFML/Window.hpp>
 #include <filesystem>
 
+/** Синглтон для загрузки текстур/шрифтов и сохранения на протяжении действия программы */
 class ResourceManager
 {
 public:
     static ResourceManager &getInstance();
+    /** Загружает ресурсы из указанной директории сохраняя в имени путь
+     * Пример: textures/Lava.png -> .get("textures/lava.png")
+     */
     void load(const std::filesystem::path &path);
+    /** Получает из внутреннего хранлища ресурс и проверяет что он загружен
+     */
     const sf::GlResource *get(const std::string &name);
 
 private:

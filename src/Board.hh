@@ -56,7 +56,12 @@ private:
     std::function<void(int)> addCount;
 
     // moves ball using A* algorithm, possibly performs an animation
-    bool moveBall(size_t srt, size_t dst);
+    /** Передвигает шар и (todo) проверяет можно ли построить маршрут
+     * @param src клетка откуда двигать шар
+     * @param dst клетка куда двигать шар
+     * @returns получилось ли передвинуть шар
+     */
+    bool moveBall(size_t src, size_t dst);
     // child of "mouseClicked" event handler
     bool getClickedTile(int mouseX, int mouseY, size_t &clickedTile);
     // adds new random balls to grid, if can't add returns false
