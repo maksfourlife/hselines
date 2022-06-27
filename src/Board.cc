@@ -1,4 +1,4 @@
-#include <iostream>
+#include <vector>
 #include "Board.hh"
 
 std::map<BallType, std::string> ballName = {
@@ -7,10 +7,15 @@ std::map<BallType, std::string> ballName = {
     {::Lava, "lava"},
     {::Terran, "terran"}};
 
-Board::Board(sf::Vector2f pos, sf::Vector2u size, size_t initialBalls)
+Board::Board(
+    sf::Vector2f pos,
+    sf::Vector2u size,
+    std::function<void(int)> addCount,
+    size_t initialBalls)
 {
     this->pos = pos;
     this->size = size;
+    this->addCount = addCount;
 
     auto resManager = ResourceManager::getInstance();
 
@@ -107,14 +112,52 @@ bool Board::getClickedTile(int mouseX, int mouseY, size_t &clickedTile)
 
 bool Board::moveBall(size_t src, size_t dst)
 {
+    auto flat = this->size.x * this->size.y;
+    if (src > flat || dst > flat)
+        throw std::runtime_error("src or dst out of grid bounds");
     if (this->ballGrid[dst] != ::None)
         return false;
+
+    // std::vector<size_t> dist(flat);
+    // std::vector<size_t> prev(flat);
+    // for (auto i = 0; i < flat; i++)
+    // {
+    //     dist[i] = -1;
+    //     prev[i] = -1;
+    // }
+    // dist[src] = 0;
+    // std::vector<size_t> q = {src};
+    // std::vector<int> neighbours = {
+    //     -1,
+    //     1,
+    //     -(int)this->size.x,
+    //     (int)this->size.x};
+    // while (q.size() > 0)
+    // {
+    //     auto it = q.begin();
+    //     for (auto _it = it; _it != q.end(); _it++)
+    //         if (dist[*_it] > dist[*it])
+    //             it = _it;
+    //     auto tile = *it;
+    //     q.erase(it);
+
+    //     for (auto neigh : neighbours)
+    //     {
+    //         auto neighTile = tile + neigh;
+    //         auto alt = dist[tile] + 1;
+    //         if (alt < dist[neighTile])
+    //         {
+    //             dist[neighTile] = alt;
+    //             q.push_back(neighTile);
+    //         }
+    //     }
+    // }
     this->ballGrid[dst] = this->ballGrid[src];
     this->ballGrid.erase(src);
     return true;
 }
 
-// if generated tail is not empty, iterate eevery possible
+// if generated tail is not empty, iterate every possible
 bool Board::generateBalls(size_t numBalls)
 {
     size_t flat = this->size.x * this->size.y;
@@ -144,6 +187,8 @@ bool Board::generateBalls(size_t numBalls)
 // todo: setPoints callback
 void Board::clearLines(size_t minBalls)
 {
+    int points = 0;
+
     for (size_t i = 0; i < this->size.x; i++)
     {
         BallType prevBallType = ::None;
@@ -156,8 +201,11 @@ void Board::clearLines(size_t minBalls)
             else
             {
                 if (prevBallType != ::None && ballCount >= minBalls)
+                {
+                    points += ballCount;
                     for (int k = ballCount; k > 0; k--)
                         this->ballGrid.erase(i * this->size.x + j - k);
+                }
                 ballCount = 1;
             }
             prevBallType = ballType;
@@ -176,13 +224,17 @@ void Board::clearLines(size_t minBalls)
             else
             {
                 if (prevBallType != ::None && ballCount >= minBalls)
+                {
+                    points += ballCount;
                     for (int k = ballCount; k > 0; k--)
-                    {
                         this->ballGrid.erase((i - k) * this->size.x + j);
-                    }
+                }
                 ballCount = 1;
             }
             prevBallType = ballType;
         }
     }
+
+    if (points > 0)
+        this->addCount(points);
 }

@@ -2,11 +2,11 @@
 #include <map>
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "GameObject.hh"
 #include "ResourceManager.hh"
 
 #define _NUM_BALL_TYPES 5
 
+/** Тип шара, используется для загрузки текстур и для составления линий */
 enum BallType
 {
     None,
@@ -16,20 +16,31 @@ enum BallType
     Terran,
 };
 
-class Board : GameObject
+/** Хранит расположение шаров, "зачеркивает линии", добавляет новые шары */
+class Board
 {
 public:
-    Board(sf::Vector2f pos, sf::Vector2u size, size_t initialBalls = 5);
+    /**
+     * @param pos позиция левого верхнего угла доски
+     * @param size кол-во клеток по вертикали и горизонтали
+     * @param addCount функция добавления очков - вызывается при "зачеркивании" линий
+     * @param initialBalls кол-во шаров, создаваемых на старте
+     */
+    Board(
+        sf::Vector2f pos,
+        sf::Vector2u size,
+        std::function<void(int)> addCount,
+        size_t initialBalls = 5);
 
-    virtual void draw(sf::RenderWindow &window) override;
-    virtual void handleEvent(const sf::Event &ev) override;
+    void draw(sf::RenderWindow &window);
+    void handleEvent(const sf::Event &ev);
 
 private:
     sf::Vector2f pos;
     sf::Vector2u size;
-    // represents which tile contain which ball
+    /** хранит пары (индекс шара, тип шара) */
     std::map<size_t, BallType> ballGrid;
-    // sprites
+
     sf::Vector2u tileSize;
     sf::Sprite tileSprite;
 
@@ -38,8 +49,11 @@ private:
 
     sf::Vector2u ballSize;
     std::map<BallType, sf::Sprite> ballSprites = {};
+
     // selected tile, used for moving balls
     size_t selectedTile = -1;
+    // increment points callback
+    std::function<void(int)> addCount;
 
     // moves ball using A* algorithm, possibly performs an animation
     bool moveBall(size_t srt, size_t dst);

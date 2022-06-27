@@ -12,6 +12,7 @@ add_executable(
     src/main.cc
     src/App.cc
     src/Board.cc
+    src/Count.cc
     src/ResourceManager.cc
 )
 

@@ -1,5 +1,4 @@
 #include "App.hh"
-
 #define SIZE 590
 
 App::App()
@@ -11,9 +10,16 @@ App::App()
 
     ResourceManager::getInstance().load("./assets");
 
+    auto count = new Count(sf::Vector2f(20, 20));
+    this->count = count;
+
     this->board = new Board(
         sf::Vector2f(5, 5),
-        sf::Vector2u(10, 10));
+        sf::Vector2u(10, 10),
+        [count](int added)
+        {
+            count->addCount(added);
+        });
 }
 
 void App::run()
@@ -27,9 +33,10 @@ void App::run()
             this->board->handleEvent(event);
         }
 
-        this->window->clear(sf::Color(0xa8, 0xa8, 0xa8));
+        this->window->clear(sf::Color(0x18, 0x17, 0x3C));
 
         this->board->draw(*this->window);
+        this->count->draw(*this->window);
 
         this->window->display();
     }
