@@ -38,7 +38,7 @@ public:
 private:
     sf::Vector2f pos;
     sf::Vector2u size;
-    /** хранит пары (индекс шара, тип шара) */
+    /** таблица шаров: хранит пары (индекс шара, тип шара) */
     std::map<size_t, BallType> ballGrid;
 
     sf::Vector2u tileSize;
@@ -55,18 +55,28 @@ private:
     // increment points callback
     std::function<void(int)> addCount;
 
-    // moves ball using A* algorithm, possibly performs an animation
     /** Передвигает шар и (todo) проверяет можно ли построить маршрут
      * @param src клетка откуда двигать шар
      * @param dst клетка куда двигать шар
      * @returns получилось ли передвинуть шар
      */
     bool moveBall(size_t src, size_t dst);
-    // child of "mouseClicked" event handler
+
+    /** Вычисляет нажатую ячейку по (x,y) нажания
+     * @param mouseX x-компонента вектора курсора мыши
+     * @param mouseT y-компонента
+     * @param clickedTile записываемый номер ячейки
+     * @returns флаг ошибки
+     */
     bool getClickedTile(int mouseX, int mouseY, size_t &clickedTile);
-    // adds new random balls to grid, if can't add returns false
+
+    /** Генерирует шары и заносит в таблицу
+     * @param numBalls кол-во шаров
+     */
     bool generateBalls(size_t numBalls);
-    // finds vertical and horizonal lines of balls with same type
-    // if finds line length > 5, clears it
+
+    /** Находит в таблице шаров "линии", убирает их и начисляет баллы
+     * @param minBalls мин. кол-во шаров в линии
+     */
     void clearLines(size_t minBalls = 5);
 };
