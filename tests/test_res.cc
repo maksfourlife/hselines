@@ -2,7 +2,22 @@
 #include "doctest.h"
 #include "ResourceManager.hh"
 
-TEST_CASE("all resources loaded")
+auto resManager = ResourceManager::getInstance();
+
+TEST_CASE("manager loads")
 {
-    auto res = ResourceManager::getInstance();
+    resManager.load("./assets");
+
+    CHECK(resManager.get("textures/baren") != nullptr);
+    CHECK(resManager.get("textures/ice") != nullptr);
+    CHECK(resManager.get("textures/lava") != nullptr);
+    CHECK(resManager.get("textures/selection") != nullptr);
+    CHECK(resManager.get("textures/terran") != nullptr);
+    CHECK(resManager.get("textures/tile") != nullptr);
+    CHECK(resManager.get("fonts/PressStart") != nullptr);
+}
+
+TEST_CASE("throws on missing")
+{
+    CHECK_THROWS(resManager.get("a"));
 }

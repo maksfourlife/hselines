@@ -61,7 +61,6 @@ add_executable(
     tests
     tests/test_res.cc
 
-    src/main.cc
     src/App.cc
     src/Board.cc
     src/Count.cc
@@ -73,4 +72,40 @@ target_include_directories(
     PUBLIC
     /usr/local/include
     ${CMAKE_SOURCE_DIR}/src
+)
+
+target_link_directories(
+    tests
+    PUBLIC
+    /usr/local/lib
+)
+
+target_link_libraries(
+    tests
+
+    sfml-system-s
+    sfml-window-s
+    sfml-graphics-s
+
+    freetype
+)
+
+if(APPLE)
+    target_link_libraries(
+        tests
+
+        "-framework CoreFoundation"
+        "-framework CoreGraphics"
+        "-framework Carbon"
+        "-framework IOKit"
+        "-framework AppKit"
+    
+        -ObjC
+    )
+endif()
+
+add_custom_command(
+    TARGET tests
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:tests>/assets
 )
