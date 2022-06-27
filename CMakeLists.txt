@@ -59,7 +59,7 @@ add_custom_command(
 # Тесты
 add_executable(
     tests
-    tests/test_res.cc
+    tests/main.cc
 
     src/App.cc
     src/Board.cc
@@ -107,5 +107,5 @@ endif()
 add_custom_command(
     TARGET tests
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:tests>/assets
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:lines>/assets
 )

@@ -117,41 +117,6 @@ bool Board::moveBall(size_t src, size_t dst)
         throw std::runtime_error("src or dst out of grid bounds");
     if (this->ballGrid[dst] != ::None)
         return false;
-
-    // std::vector<size_t> dist(flat);
-    // std::vector<size_t> prev(flat);
-    // for (auto i = 0; i < flat; i++)
-    // {
-    //     dist[i] = -1;
-    //     prev[i] = -1;
-    // }
-    // dist[src] = 0;
-    // std::vector<size_t> q = {src};
-    // std::vector<int> neighbours = {
-    //     -1,
-    //     1,
-    //     -(int)this->size.x,
-    //     (int)this->size.x};
-    // while (q.size() > 0)
-    // {
-    //     auto it = q.begin();
-    //     for (auto _it = it; _it != q.end(); _it++)
-    //         if (dist[*_it] > dist[*it])
-    //             it = _it;
-    //     auto tile = *it;
-    //     q.erase(it);
-
-    //     for (auto neigh : neighbours)
-    //     {
-    //         auto neighTile = tile + neigh;
-    //         auto alt = dist[tile] + 1;
-    //         if (alt < dist[neighTile])
-    //         {
-    //             dist[neighTile] = alt;
-    //             q.push_back(neighTile);
-    //         }
-    //     }
-    // }
     this->ballGrid[dst] = this->ballGrid[src];
     this->ballGrid.erase(src);
     return true;
