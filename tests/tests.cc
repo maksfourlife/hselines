@@ -30,9 +30,9 @@ TEST_CASE("Board: 1x1 has 1-ball grid")
     auto board = Board::mock(
         sf::Vector2f(0, 0),
         sf::Vector2u(1, 1),
-        sf::Vector2u(58, 58),
-        sf::Vector2u(58, 58),
-        sf::Vector2u(58, 58),
+        sf::Vector2u(0, 0),
+        sf::Vector2u(0, 0),
+        sf::Vector2u(0, 0),
         [](int _) {}, 1);
 
     CHECK(board.ballGrid.size() == 1);
@@ -43,12 +43,59 @@ TEST_CASE("Board: 1x1 with 1 ball can add 1 and not 2")
     auto board = Board::mock(
         sf::Vector2f(0, 0),
         sf::Vector2u(1, 2),
-        sf::Vector2u(58, 58),
-        sf::Vector2u(58, 58),
-        sf::Vector2u(58, 58),
+        sf::Vector2u(0, 0),
+        sf::Vector2u(0, 0),
+        sf::Vector2u(0, 0),
         [](int _) {}, 1);
 
     CHECK(board.ballGrid.size() == 1);
     CHECK(board.generateBalls(1));
     CHECK(!board.generateBalls(1));
+}
+
+TEST_CASE("Board: not crosses empty line")
+{
+    auto board = Board::mock(
+        sf::Vector2f(0, 0),
+        sf::Vector2u(4, 4),
+        sf::Vector2u(0, 0),
+        sf::Vector2u(0, 0),
+        sf::Vector2u(0, 0),
+        [](int _)
+        {
+            throw std::runtime_error("crossed empty line");
+        },
+        1);
+
+    board.clearLines(3);
+}
+
+TEST_CASE("Board: crosses one type line")
+{
+    bool sw;
+
+    auto board = Board::mock(
+        sf::Vector2f(0, 0),
+        sf::Vector2u(4, 4),
+        sf::Vector2u(0, 0),
+        sf::Vector2u(0, 0),
+        sf::Vector2u(0, 0),
+        [&sw](int _)
+        {
+            sw = !sw;
+        },
+        1);
+
+    board.ballGrid[0] = ::Lava;
+    board.ballGrid[1] = ::Terran;
+    board.ballGrid[2] = ::Lava;
+
+    board.clearLines(3);
+    CHECK(!sw);
+
+    board.ballGrid[1] = ::Lava;
+    sw = true;
+
+    board.clearLines(3);
+    CHECK(!sw);
 }
