@@ -3,20 +3,20 @@
 
 App::App()
 {
-    this->window = new sf::RenderWindow(
+    this->window = std::make_unique<sf::RenderWindow>(
         sf::VideoMode(sf::Vector2u(SIZE, SIZE)),
         "Lines",
         sf::Style::Default & ~sf::Style::Resize);
 
     ResourceManager::getInstance().load("./assets");
 
-    auto count = new Count(sf::Vector2f(20, 20));
-    this->count = count;
+    this->count = std::make_shared<Count>(sf::Vector2f(20, 20));
+    auto count = this->count;
 
-    this->board = new Board(
+    this->board = std::make_unique<Board>(
         sf::Vector2f(5, 5),
         sf::Vector2u(10, 10),
-        [count](int added)
+        [&count](int added)
         {
             count->addCount(added);
         });
@@ -54,10 +54,4 @@ void App::handleEvent(const sf::Event &ev)
     default:
         break;
     }
-}
-
-App::~App()
-{
-    delete this->board;
-    delete this->window;
 }

@@ -96,6 +96,7 @@
         "slist": "cpp",
         "cfenv": "cpp",
         "__bits": "cpp",
-        "format": "cpp"
+        "format": "cpp",
+        "csignal": "cpp"
     }
 }

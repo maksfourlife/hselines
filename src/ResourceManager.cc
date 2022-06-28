@@ -15,34 +15,34 @@ void ResourceManager::load(const fs::path &assets_path)
     {
         auto path = entry.path();
         auto ext = path.extension();
-        sf::GlResource *res;
+        std::shared_ptr<void> res;
         bool ok = false;
         if (ext == ".png")
         {
-            auto texture = new sf::Texture();
+            auto texture = std::make_shared<sf::Texture>();
             ok = texture->loadFromFile(path);
-            res = (sf::GlResource *)texture;
+            res = texture;
         }
         else if (ext == ".ttf")
         {
-            auto font = new sf::Font();
+            auto font = std::make_shared<sf::Font>();
             ok = font->loadFromFile(path);
-            res = (sf::GlResource *)font;
+            res = font;
         }
         if (ok)
         {
             auto name = fs::relative(path, assets_path).string();
             name = name.substr(0, name.find_last_of("."));
-            resources.insert({name, res});
+            this->resources[name] = res;
         }
     }
 }
 
-const sf::GlResource *ResourceManager::get(const std::string &name)
+const void *ResourceManager::get(const std::string &name)
 {
     auto res = this->resources[name];
     if (res == nullptr)
         throw std::runtime_error(
             "resource " + name + " not found");
-    return res;
+    return res.get();
 }

@@ -5,8 +5,8 @@ Count::Count(sf::Vector2f pos)
 {
     this->text.setPosition(pos);
     this->text.setFont(
-        *(sf::Font *)ResourceManager::getInstance()
-             .get("fonts/PressStart"));
+        *(sf::Font *)(ResourceManager::getInstance()
+                          .get("fonts/PressStart")));
     this->text.setString(std::to_string(this->count));
 }
 

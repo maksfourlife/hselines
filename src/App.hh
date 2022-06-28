@@ -7,13 +7,12 @@ class App
 {
 public:
     App();
-    ~App();
     void run();
 
 private:
-    sf::RenderWindow *window;
-    Board *board;
-    Count *count;
+    std::unique_ptr<sf::RenderWindow> window;
+    std::unique_ptr<Board> board;
+    std::shared_ptr<Count> count;
 
     void handleEvent(const sf::Event &ev);
 };

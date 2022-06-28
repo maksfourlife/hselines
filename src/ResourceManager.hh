@@ -17,8 +17,8 @@ public:
     void load(const std::filesystem::path &path);
     /** Получает из внутреннего хранлища ресурс и проверяет что он загружен
      */
-    const sf::GlResource *get(const std::string &name);
+    const void *get(const std::string &name);
 
 private:
-    std::map<std::string, sf::GlResource *> resources;
+    std::map<std::string, std::shared_ptr<void>> resources;
 };
