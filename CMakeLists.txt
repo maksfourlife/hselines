@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19.6)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 project(hselines)
 
@@ -59,7 +59,7 @@ add_custom_command(
 # Тесты
 add_executable(
     tests
-    tests/main.cc
+    tests/tests.cc
 
     src/App.cc
     src/Board.cc

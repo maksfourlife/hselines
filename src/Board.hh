@@ -35,7 +35,18 @@ public:
     void draw(sf::RenderWindow &window);
     void handleEvent(const sf::Event &ev);
 
+    static Board mock(
+        sf::Vector2f pos,
+        sf::Vector2u size,
+        sf::Vector2u tileSize,
+        sf::Vector2u selectionSize,
+        sf::Vector2u ballSize,
+        std::function<void(int)> addCount,
+        size_t initialBalls);
+
 private:
+    Board() {}
+
     sf::Vector2f pos;
     sf::Vector2u size;
     /** таблица шаров: хранит пары (индекс шара, тип шара) */

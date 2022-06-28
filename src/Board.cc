@@ -38,6 +38,26 @@ Board::Board(
     this->generateBalls(initialBalls);
 }
 
+Board Board::mock(
+    sf::Vector2f pos,
+    sf::Vector2u size,
+    sf::Vector2u tileSize,
+    sf::Vector2u selectionSize,
+    sf::Vector2u ballSize,
+    std::function<void(int)> addCount,
+    size_t initialBalls)
+{
+    Board b;
+    b.pos = pos;
+    b.size = size;
+    b.addCount = addCount;
+    b.tileSize = tileSize;
+    b.selectionSize = selectionSize;
+    b.ballSize = ballSize;
+    b.generateBalls(initialBalls);
+    return b;
+}
+
 void Board::draw(sf::RenderWindow &window)
 {
     auto ballOffset = sf::Vector2f(

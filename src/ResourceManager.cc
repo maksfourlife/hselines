@@ -42,6 +42,7 @@ const sf::GlResource *ResourceManager::get(const std::string &name)
 {
     auto res = this->resources[name];
     if (res == nullptr)
-        throw std::runtime_error("resource not found");
+        throw std::runtime_error(
+            "resource " + name + " not found");
     return res;
 }

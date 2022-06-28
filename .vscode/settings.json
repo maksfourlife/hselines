@@ -95,6 +95,7 @@
         "hash_set": "cpp",
         "slist": "cpp",
         "cfenv": "cpp",
-        "__bits": "cpp"
+        "__bits": "cpp",
+        "format": "cpp"
     }
 }
